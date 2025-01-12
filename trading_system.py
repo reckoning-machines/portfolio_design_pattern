@@ -122,16 +122,17 @@ class Position(PositionMeta):
 """
 client code
 """
+if __name__ == "__main__":
 
-PRICES = {"ABC": 53.34, "CFG": 43.30, "DEF": 239.87, "XYZ": 63.45, "YYZ": 27.56}
-STOCKS = ["ABC", "CFG", "DEF", "XYZ", "YYZ"]
-p = Portfolio("POD-001", 10000000)
+    PRICES = {"ABC": 53.34, "CFG": 43.30, "DEF": 239.87, "XYZ": 63.45, "YYZ": 27.56}
+    STOCKS = ["ABC", "CFG", "DEF", "XYZ", "YYZ"]
+    p = Portfolio("POD-001", 10000000)
 
-for stock in STOCKS:
-    s = Stock(stock)
-    s.price = PRICES[stock]
-    pos = Position(stock=s, notional=100000)
-    p.add_position(pos)
+    for stock in STOCKS:
+        s = Stock(stock)
+        s.price = PRICES[stock]
+        pos = Position(stock=s, notional=100000)
+        p.add_position(pos)
 
-print(p.positions)
-print(p.gross_notional)
+    print(p.positions)
+    print(p.gross_notional)
