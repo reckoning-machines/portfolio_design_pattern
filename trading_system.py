@@ -212,9 +212,8 @@ client code goes here
 if __name__ == "__main__":
 
     """
-    here the client would poll the existing portfolio system and build a portfolio object
-    of the existing portfolio
-    example shown here
+    here the client would build a portfolio object
+    (perhaps after polling the existing positions in a portfolio system)
     """
 
     PRICES = {"ABC": 53.34, "CFG": 43.30, "DEF": 239.87, "XYZ": 63.45, "YYZ": 27.56}
@@ -223,6 +222,9 @@ if __name__ == "__main__":
     for stock in STOCKS:
         clsStock = Stock(stock)
         clsStock.price = PRICES[stock]
+        """
+        add new position to portfolio
+        """
         pos = Position(stock=clsStock, notional=100000)
         clsPortfolio.execute_position(pos)
 
