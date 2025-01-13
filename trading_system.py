@@ -14,6 +14,11 @@ class PortfolioMeta(ABC):
     def execute_position(self, *args, **kwargs):
         pass
 
+    @abstractmethod
+    def execute_trade(self, *args, **kwargs):
+        pass
+
+    @abstractmethod
     def pretty_print(self):
         pass
 
@@ -24,10 +29,22 @@ class Portfolio(PortfolioMeta):
     def execute_position(self, Position):
         """
         check if position exists
-        if position from + to -, execute sell and sell short if needed
+        if position from + to -, execute sell and sell short if needed (raise warning)
         if position does not exists and -, sell short
         check total gross notional against max gross notional and return warning if >
         """
+
+        """
+        check if position exists
+        """
+        if self._positions.get(Position.stock.symbol, None) is not None:
+            curr_notional = self._positions[Position.stock.notional]
+            new_notional = curr_notional + self._positions[Position.stock.notional]
+            """
+            check if we flipped
+            """
+            self._positions[Position.stock.notional] = new_notional
+
         self._positions[Position.stock.symbol] = Position
         self._gross_notional = 0
         for key in self._positions.keys():
@@ -87,6 +104,9 @@ class Portfolio(PortfolioMeta):
         df = pl.DataFrame(print_dict)
         df = df.sort("notional")
         return df
+
+    def execute_trade(self):
+        pass
 
 
 @dataclass
