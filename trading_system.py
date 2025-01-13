@@ -215,7 +215,8 @@ if __name__ == "__main__":
     here the client would build a portfolio object
     (perhaps after polling the existing positions in a portfolio system)
     """
-
+    print("instantiate portfolio")
+    
     PRICES = {"ABC": 53.34, "CFG": 43.30, "DEF": 239.87, "XYZ": 63.45, "YYZ": 27.56}
     STOCKS = ["ABC", "CFG", "DEF", "XYZ", "YYZ"]
     clsPortfolio = Portfolio("POD-001", 10000000)
@@ -236,6 +237,7 @@ if __name__ == "__main__":
     """
     short DEF
     """
+    print("short DEF")
     clsStock = Stock("DEF")
     clsStock.price = PRICES[stock]
     pos = Position(clsStock, notional=-200000)
