@@ -6,6 +6,13 @@ import polars as pl
 
 @dataclass
 class PortfolioMeta(ABC):
+    """
+    an abstract class for implementing the portfolio object
+    methods to be overwritten
+    in the event of different portfolio types
+    abstract pattern enforced for system integration
+    """
+
     _name: str
     _max_gross_notional: float
     _positions: dict = field(default_factory=dict)
@@ -24,6 +31,10 @@ class PortfolioMeta(ABC):
 
 
 class Portfolio(PortfolioMeta):
+    """
+    a class to handle a single portfolio
+    """
+
     _gross_notional: float = 0
 
     def execute_position(self, Position):
@@ -87,6 +98,9 @@ class Portfolio(PortfolioMeta):
         return self._gross_notional
 
     def pretty_print(self):
+        """
+        return a polars dataframe of the positions in the portfolio
+        """
         print_dict = {}
         symbol_list = []
         shares_list = []
@@ -111,12 +125,21 @@ class Portfolio(PortfolioMeta):
 
 @dataclass
 class StockMeta(ABC):
+    """
+    abstract class for a stock
+    design enforced for system integration in case of different types of stocks
+    """
+
     _symbol: str
     _price: str
 
 
 @dataclass
 class Stock(StockMeta):
+    """
+    a class to handle a single stock object
+    """
+
     _symbol: str
     _price: float = -1
 
@@ -147,6 +170,10 @@ class Stock(StockMeta):
 
 @dataclass
 class PositionMeta(ABC):
+    """
+    abstract class for a stock and what the portfolio manager wants to do with it
+    """
+
     stock: Stock
     notional: Optional[float] = None
     shares: Optional[int] = None
@@ -160,6 +187,10 @@ class PositionMeta(ABC):
 
 @dataclass
 class Position(PositionMeta):
+    """
+    a single position type with some error checks
+    """
+
     stock: Stock = None
     notional: float = None
     shares: int = None
@@ -175,18 +206,27 @@ class Position(PositionMeta):
 
 
 """
-client code
+client code goes here
 """
+
 if __name__ == "__main__":
+
+    """
+    here the client would poll the existing portfolio system and build a portfolio object
+    of the existing portfolio
+    example shown here
+    """
 
     PRICES = {"ABC": 53.34, "CFG": 43.30, "DEF": 239.87, "XYZ": 63.45, "YYZ": 27.56}
     STOCKS = ["ABC", "CFG", "DEF", "XYZ", "YYZ"]
     clsPortfolio = Portfolio("POD-001", 10000000)
-
     for stock in STOCKS:
         clsStock = Stock(stock)
         clsStock.price = PRICES[stock]
         pos = Position(stock=clsStock, notional=100000)
         clsPortfolio.execute_position(pos)
 
+    """
+    pretty_print returns a polars dataframe of the positions in the book
+    """
     print(clsPortfolio.pretty_print())
