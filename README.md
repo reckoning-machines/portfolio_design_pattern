@@ -4,6 +4,6 @@ Work in process.
 
 Portfolio, position, stock classes.
 
-Stock is implementated as a singleton.
+Project uses polars.
 
 To do: handle short sales.
