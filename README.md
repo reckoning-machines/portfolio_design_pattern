@@ -9,7 +9,7 @@ Project uses polars.
 
 See "client code" section of trading_system.py for an example.
 
-<img width="623" alt="image" src="https://github.com/user-attachments/assets/49bd89a4-b709-4c82-bab3-150142cd5772" />
+<img width="627" alt="image" src="https://github.com/user-attachments/assets/8c9e0f18-9128-492f-82f0-5959238ad6f0" />
 
 
-<img width="293" alt="image" src="https://github.com/user-attachments/assets/35481d6e-fb37-45b3-ba56-85d3eb7a4f9a" />
+<img width="293" alt="image" src="https://github.com/user-attachments/assets/a1644b8e-cf1f-4cd8-a7fa-f450d7dc785d" />
