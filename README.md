@@ -10,4 +10,4 @@ To do: handle short sales.
 
 See "client code" section of trading_system.py for an example.
 
-<img width="299" alt="image" src="https://github.com/user-attachments/assets/a3d0e943-38d9-49f4-95d5-98a3df35fe79" />
+<img width="293" alt="image" src="https://github.com/user-attachments/assets/35481d6e-fb37-45b3-ba56-85d3eb7a4f9a" />
