@@ -6,7 +6,6 @@ Portfolio, position, stock classes.
 
 Project uses polars.
 
-To do: handle short sales.
 
 See "client code" section of trading_system.py for an example.
 
