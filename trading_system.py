@@ -55,6 +55,7 @@ class Portfolio(PortfolioMeta):
             To do: check if we flipped
             """
             Position.notional = new_notional
+            Position.shares = round(Position.notional / Position.stock.price)
 
         self._positions[Position.stock.symbol] = Position
         self._gross_notional = 0
@@ -238,8 +239,9 @@ if __name__ == "__main__":
     short DEF
     """
     print("short DEF")
-    clsStock = Stock("DEF")
-    clsStock.price = PRICES[stock]
+    stock_symbol = "DEF"
+    clsStock = Stock(stock_symbol)
+    clsStock.price = PRICES[stock_symbol]
     pos = Position(clsStock, notional=-200000)
     clsPortfolio.execute_position(pos)
     print(clsPortfolio.pretty_print())
