@@ -1,35 +1,41 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Optional
+import polars as pl
 
 
 @dataclass
 class PortfolioMeta(ABC):
     _name: str
     _max_gross_notional: float
-    _positions: list[int] = field(default_factory=list)
+    _positions: dict = field(default_factory=dict)
 
     @abstractmethod
-    def add_position(self, *args, **kwargs):
+    def execute_position(self, *args, **kwargs):
         pass
 
-    @abstractmethod
-    def remove_position(self, *args, **kwargs):
+    def pretty_print(self):
         pass
 
 
 class Portfolio(PortfolioMeta):
     _gross_notional: float = 0
 
-    def add_position(self, Position):
-        self._positions.append(Position)
+    def execute_position(self, Position):
+        """
+        check if position exists
+        if position from + to -, execute sell and sell short if needed
+        if position does not exists and -, sell short
+        check total gross notional against max gross notional and return warning if >
+        """
+        self._positions[Position.stock.symbol] = Position
         self._gross_notional = 0
-        for p in self._positions:
-            self._gross_notional = self._gross_notional + p.notional
-
-    def remove_position(self, Position):
-        if Position in self._positions:
-            self._positions.remove(Position)
+        for key in self._positions.keys():
+            self._gross_notional = self._gross_notional + self._positions[key].notional
+        if self._gross_notional > self._max_gross_notional:
+            print(
+                f"Portfolio gross {self._gross_notional} is over max gross notional: {self._max_gross_notional}"
+            )
 
     @property
     def name(self):
@@ -63,20 +69,35 @@ class Portfolio(PortfolioMeta):
     def gross_notional(self):
         return self._gross_notional
 
-
-class StockMeta(type):
-    _instances = {}
-
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            instance = super().__call__(*args, **kwargs)
-            cls._instances[cls] = instance
-        return cls._instances[cls]
+    def pretty_print(self):
+        print_dict = {}
+        symbol_list = []
+        shares_list = []
+        notional_list = []
+        price_list = []
+        for key in clsPortfolio.positions:
+            symbol_list.append(clsPortfolio.positions[key].stock.symbol)
+            shares_list.append(clsPortfolio.positions[key].shares)
+            notional_list.append(clsPortfolio.positions[key].notional)
+            price_list.append(clsPortfolio.positions[key].stock.price)
+        print_dict["symbol"] = symbol_list
+        print_dict["shares"] = shares_list
+        print_dict["notional"] = notional_list
+        print_dict["price"] = price_list
+        df = pl.DataFrame(print_dict)
+        df = df.sort("notional")
+        return df
 
 
 @dataclass
-class Stock(metaclass=StockMeta):
-    symbol: str
+class StockMeta(ABC):
+    _symbol: str
+    _price: str
+
+
+@dataclass
+class Stock(StockMeta):
+    _symbol: str
     _price: float = -1
 
     @property
@@ -87,6 +108,20 @@ class Stock(metaclass=StockMeta):
     def price(self, value):
         if not isinstance(value, float):
             raise TypeError("Price must be a float")
+        self._price = value
+
+    @property
+    def symbol(self):
+        return self._symbol
+
+    @symbol.setter
+    def symbol(self, value):
+        if not isinstance(value, str):
+            """
+            more validation can go here,
+            like restricted list or is a valid traded symbol
+            """
+            raise TypeError("Symbol must be a string")
         self._price = value
 
 
@@ -126,13 +161,12 @@ if __name__ == "__main__":
 
     PRICES = {"ABC": 53.34, "CFG": 43.30, "DEF": 239.87, "XYZ": 63.45, "YYZ": 27.56}
     STOCKS = ["ABC", "CFG", "DEF", "XYZ", "YYZ"]
-    p = Portfolio("POD-001", 10000000)
+    clsPortfolio = Portfolio("POD-001", 10000000)
 
     for stock in STOCKS:
-        s = Stock(stock)
-        s.price = PRICES[stock]
-        pos = Position(stock=s, notional=100000)
-        p.add_position(pos)
+        clsStock = Stock(stock)
+        clsStock.price = PRICES[stock]
+        pos = Position(stock=clsStock, notional=100000)
+        clsPortfolio.execute_position(pos)
 
-    print(p.positions)
-    print(p.gross_notional)
+    print(clsPortfolio.pretty_print())
