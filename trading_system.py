@@ -54,12 +54,12 @@ class Portfolio(PortfolioMeta):
             """
             To do: check if we flipped
             """
-            self._positions[Position.stock.symbol] = new_notional
+            Position.notional = new_notional
 
         self._positions[Position.stock.symbol] = Position
         self._gross_notional = 0
-        for key in self._positions.keys():
-            self._gross_notional = self._gross_notional + self._positions[key].notional
+        for key in self.positions.keys():
+            self._gross_notional = self._gross_notional + self.positions[key].notional
         if self._gross_notional > self._max_gross_notional:
             print(
                 f"Portfolio gross {self._gross_notional} is over max gross notional: {self._max_gross_notional}"
@@ -216,7 +216,7 @@ if __name__ == "__main__":
     (perhaps after polling the existing positions in a portfolio system)
     """
     print("instantiate portfolio")
-    
+
     PRICES = {"ABC": 53.34, "CFG": 43.30, "DEF": 239.87, "XYZ": 63.45, "YYZ": 27.56}
     STOCKS = ["ABC", "CFG", "DEF", "XYZ", "YYZ"]
     clsPortfolio = Portfolio("POD-001", 10000000)
