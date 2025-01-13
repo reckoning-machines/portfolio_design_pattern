@@ -52,7 +52,7 @@ class Portfolio(PortfolioMeta):
             curr_notional = self._positions[Position.stock.notional]
             new_notional = curr_notional + self._positions[Position.stock.notional]
             """
-            check if we flipped
+            To do: check if we flipped
             """
             self._positions[Position.stock.notional] = new_notional
 
@@ -137,7 +137,7 @@ class StockMeta(ABC):
 @dataclass
 class Stock(StockMeta):
     """
-    a class to handle a single stock object
+    a class to handle a single type of stock object
     """
 
     _symbol: str
