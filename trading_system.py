@@ -49,12 +49,12 @@ class Portfolio(PortfolioMeta):
         check if position exists
         """
         if self._positions.get(Position.stock.symbol, None) is not None:
-            curr_notional = self._positions[Position.stock.notional]
-            new_notional = curr_notional + self._positions[Position.stock.notional]
+            curr_notional = self._positions[Position.stock.symbol].notional
+            new_notional = curr_notional + Position.notional
             """
             To do: check if we flipped
             """
-            self._positions[Position.stock.notional] = new_notional
+            self._positions[Position.stock.symbol] = new_notional
 
         self._positions[Position.stock.symbol] = Position
         self._gross_notional = 0
@@ -231,4 +231,13 @@ if __name__ == "__main__":
     """
     pretty_print returns a polars dataframe of the positions in the book
     """
+    print(clsPortfolio.pretty_print())
+
+    """
+    short DEF
+    """
+    clsStock = Stock("DEF")
+    clsStock.price = PRICES[stock]
+    pos = Position(clsStock, notional=-200000)
+    clsPortfolio.execute_position(pos)
     print(clsPortfolio.pretty_print())
